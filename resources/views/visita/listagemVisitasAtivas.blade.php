@@ -18,7 +18,7 @@
         <h1 style="text-align: center">Listagem de Visitas Ativas</h1>
         
         <?php 
-            if (isset($dadosDb)){ 
+            if (!$dadosDb->isEmpty()){ 
         ?>
         
         <div class="row justify-content-center">
@@ -126,7 +126,10 @@
         </div>
 
         <?php 
-            } 
+            } else{
+                echo "<br>";
+                echo "<h2 style='text-align: center'>Nenhuma Visita Ativa</h2>";
+            }
         ?>
     </div>
 

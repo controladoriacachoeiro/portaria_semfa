@@ -131,15 +131,13 @@
             </div>
         </div>
 
-        
-
         <?php 
             } 
         ?>
 
         <br>
         <?php 
-            if (isset($dadosDb2)){ 
+            if (!$dadosDb2->isEmpty()){ 
         ?>
         
         <div class="row justify-content-center">
