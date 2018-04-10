@@ -137,7 +137,9 @@
 
         <br>
         <?php 
-            if (!$dadosDb2->isEmpty()){ 
+            if(isset($dadosDb2)){
+
+                if (!$dadosDb2->isEmpty()){ 
         ?>
         
         <div class="row justify-content-center">
@@ -216,7 +218,8 @@
         </div>
 
         <?php 
-            } 
+                } 
+            }
         ?>
         
     </div>  
