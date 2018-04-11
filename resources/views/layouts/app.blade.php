@@ -166,7 +166,7 @@
 
     <footer class="border-top">
         <div class="row justify-content-center">
-          <p>Desenvolvido pela equipe do Portal da Transparência - {{date('Y')}} - v-1.3</p>
+          <p>Desenvolvido pela equipe do Portal da Transparência - {{date('Y')}} - v-1.3.2</p>
         </div>
     </footer>
 
