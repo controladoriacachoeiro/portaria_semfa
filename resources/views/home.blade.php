@@ -86,7 +86,7 @@
         <div class="row justify-content-center">
             <div class="col-md-10">
                 <div class="card">
-                    <div class="card-header">Resultado</div>
+                    <div class="card-header" style="color: red; font-size: 16"><b>Resultado da Busca</b></div>
                     <table id="tabela" class="table table-bordered table-striped" summary="Resultado da pesquisa">
                         <thead>
                             <tr>
@@ -144,7 +144,7 @@
         <div class="row justify-content-center">
             <div class="col-md-13">
                 <div class="card">
-                    <div class="card-header">Visitas ATIVAS</div>
+                    <div class="card-header" style="color: red; font-size: 16"><b>Visitas ATIVAS</b></div>
                     <table id="tabela" class="table table-bordered table-striped" summary="Resultado da pesquisa">
                         <thead>
                             <tr>
