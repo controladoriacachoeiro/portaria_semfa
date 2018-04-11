@@ -113,6 +113,7 @@ class VisitaController extends Controller
 
         $dadosDb->join('visitante', 'visita.visitanteID', '=', 'visitante.visitanteID');
         $dadosDb->join('local', 'visita.localID', '=', 'local.localID');
+        $dadosDb->join('users', 'visita.userID', '=', 'users.id');
         
         $dadosDb = $dadosDb->paginate(20);
 
@@ -178,6 +179,7 @@ class VisitaController extends Controller
         $dadosDb = VisitaModel::orderBy('visitaID');
 
         $dadosDb->where('visitaID', '=', $visitaID);
+        $dadosDb->join('local', 'visita.localID', '=', 'local.localID');
         $dadosDb = $dadosDb->get();
 
         $dadosDb2 = VisitanteModel::orderBy('visitanteID');
@@ -221,7 +223,7 @@ class VisitaController extends Controller
 
     //POST
     public function editarVisita(Request $request){
-
+        
         $request->dataHora = $request->dataHora . ":00";
         $request->dataHora = $this->ajeitaDataHora2($request->dataHora);
 
@@ -235,9 +237,8 @@ class VisitaController extends Controller
         $dadosDb->where('visitaID', '=', $request->visitaID);
         $dadosDb->update(['localID' => $request->localID, 'dataHora' => $request->dataHora, 'dataHoraSaida' => $request->dataHoraSaida, 'numeroCracha' => $request->numeroCracha, 'visitado' => $request->visitado, 'assunto' => $request->assunto]);
 
-        
-        
-        return redirect('pesquisarVisitas')->with('sucesso', 'Visita Alterada com Sucesso');
+        // return redirect('pesquisarVisitas')->with('sucesso', 'Visita Alterada com Sucesso');
+        return redirect()->route('verVisita', ['visitaID' => $request->visitaID])->with('sucesso', 'Visita Alterada com Sucesso');
     }
 
     //POST

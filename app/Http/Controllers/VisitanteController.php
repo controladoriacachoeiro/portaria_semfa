@@ -17,6 +17,8 @@ class VisitanteController extends Controller
         
         $files = $request->file('file');
         $files2 = Storage::files('/');
+        $request->nome = strtoupper($request->nome);
+        
         $dadosDb = VisitanteModel::orderBy('nomeVisitante');
 
         if($request->tipoDoc == "CPF"){
@@ -173,6 +175,7 @@ class VisitanteController extends Controller
 
         $files = $request->file('file');
         $files2 = Storage::files('/');
+        $request->nomeVisitante = strtoupper($request->nomeVisitante);
 
         if($request->tipoDoc == "CPF"){
             $request->numeroDoc = $this->ajeitarCPF($request->numeroDoc);

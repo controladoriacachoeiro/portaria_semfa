@@ -54,7 +54,7 @@
 
                                 <div class="col-md-6">
                                     <select id="localID" class="form-control" name="localID">
-
+                                    
                                     </select>
       
                                 </div>
@@ -117,6 +117,25 @@
                                     <button type="button" class="btn btn-primary" style="float: right" id="buttonVoltar">Voltar</button>
                                 </div>
                             </div>
+
+                            <!-- Erro -->
+                            @if(session()->has('message'))
+                                <br>
+                                <div class="form-group row mb-0 alert alert-danger" style="font-size:20px">
+                                    {{ session()->get('message') }}
+                                </div>
+                            @endif
+                            <!--Fim erro-->
+
+                            <!-- Sucesso -->
+                            @if(session()->has('sucesso'))
+                                <br>
+                                <div class="form-group row mb-0 alert alert-success" style="font-size:16px">
+                                    {{ session()->get('sucesso') }}
+                                </div>
+                            @endif
+                            <!-- Fim sucesso -->
+
                         </form>
                     </div>
 
@@ -155,6 +174,7 @@
                 option = option + "<option value='" + x[i].localID.toString() + "'>"+x[i].nomeLocal+"</option>";                
             }
             $('#localID').html(option).show();
+            $("#localID").val($('option:contains({{$dadosDb[0]->nomeLocal}})').val());
         });
     });
 

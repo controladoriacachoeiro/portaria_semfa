@@ -95,10 +95,12 @@
                                 <th scope='col' style='vertical-align:middle'>Número do Documento</th>
                                 <th scope='col' style='vertical-align:middle'>Data e Hora da Visita</th>
                                 <th scope='col' style='vertical-align:middle'>Data e Hora da Saída</th>
+                                <th scope='col' style='vertical-align:middle'>Número do Crachá</th>
                                 <th scope='col' style='vertical-align:middle'>Local</th>
                                 <th scope='col' style='vertical-align:middle'>Pessoa que Visitou</th>
                                 <th scope='col' style='vertical-align:middle'>Assunto</th>
                                 @if($nomeExibicao == "Administrador")
+                                    <th scope='col' style='vertical-align:middle'>Porteiro</th>
                                     <th scope='col' style='vertical-align:middle'></th>
                                     <th scope='col' style='vertical-align:middle'></th>
                                 @endif
@@ -119,11 +121,13 @@
                                     echo "<td scope='col'>".$valor->numeroDoc."</td>";
                                     echo "<td scope='col'>".$valor->dataHora."</td>";
                                     echo "<td scope='col'>".$valor->dataHoraSaida."</td>";
+                                    echo "<td scope='col'>".$valor->numeroCracha."</td>";
                                     echo "<td scope='col'>".$valor->nomeLocal."</td>";
                                     echo "<td scope='col'>".$valor->visitado."</td>";
                                     echo "<td scope='col'>".$valor->assunto."</td>";
                                     
                                     if($nomeExibicao == "Administrador"){
+                                        echo "<td scope='col'>".$valor->name."</td>";
                                         echo "<td scope='col'><a class='btn btn-primary' href='". route('verVisita', ['visitaID' => $valor->visitaID]) . "' role='button'>Editar</a></td>";
                                         echo "<td scope='col'><button type='button' class='btn btn-primary' data-toggle='modal' data-target='#modalConfirmar" . $aux . "'>Apagar</button></td>";
                                     }

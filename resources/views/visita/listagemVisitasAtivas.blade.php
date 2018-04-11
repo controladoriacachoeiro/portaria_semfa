@@ -18,7 +18,8 @@
         <h1 style="text-align: center">Listagem de Visitas Ativas</h1>
         
         <?php 
-            if (!$dadosDb->isEmpty()){ 
+            if (isset($dadosDb)){
+                if(!$dadosDb->isEmpty()){
         ?>
         
         <div class="row justify-content-center">
@@ -124,12 +125,12 @@
                 <span style="float: right; margin-top: 5px">{{$dadosDb->links()}}</span>
             </div>
         </div>
-
+        <br>
         <?php 
-            } else{
-                echo "<br>";
-                echo "<h2 style='text-align: center'>Nenhuma Visita Ativa</h2>";
-            }
+                } else{
+                    echo "<div class='form-group row mb-0 alert alert-danger' style='font-size:20px'>Nenhuma Visita Ativa no momento </div>";
+                }
+            } 
         ?>
     </div>
 
