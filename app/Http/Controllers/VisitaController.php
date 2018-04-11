@@ -110,10 +110,10 @@ class VisitaController extends Controller
     //GET
     public function carregarTodasVisitas(){
         $dadosDb = VisitaModel::orderBy('visitaID', 'desc');
-
+        $dadosDb->join('users', 'visita.userID', '=', 'users.id');
         $dadosDb->join('visitante', 'visita.visitanteID', '=', 'visitante.visitanteID');
         $dadosDb->join('local', 'visita.localID', '=', 'local.localID');
-        $dadosDb->join('users', 'visita.userID', '=', 'users.id');
+        
         
         $dadosDb = $dadosDb->paginate(20);
 
