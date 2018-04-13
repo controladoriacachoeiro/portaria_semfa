@@ -55,7 +55,6 @@
                                     <select id="localID" class="form-control" name="localID">
 
                                     </select>
-      
                                 </div>
                             </div>
 
@@ -79,14 +78,14 @@
                                 <label for="numeroCrachaLabel" class="col-md-4 col-form-label text-md-right">Número do Crachá</label>
 
                                 <div class="col-md-6">
-                                    <input id="numeroCracha" type="text" class="form-control" name="numeroCracha">
+                                    <select id="numeroCracha" class="form-control" name="numeroCracha">
+
+                                    </select>
                                 </div>
                             </div>
                             
                             <?php  
-                                if ($nomeExibicao == "Administrador"){
-
-                                
+                                if ($nomeExibicao == "Administrador"){          
                             ?>
 
                             <div class="form-group row">
@@ -116,10 +115,8 @@
                             ?>
 
                             <input id="visitanteID" type="hidden" class="form-control" name="visitanteID" value='{{$visitanteID}}'>
-                                
-                            
+
                             <input id="userID" type="hidden" class="form-control" name="userID" value='{{Auth::user()->id}}'>
-                                
 
                             <div class="form-group row mb-0">
                                 <div class="col-md-6 offset-md-4">
@@ -151,14 +148,29 @@
     // LoadPage
     $(function () {
         $(document).ready(function() {
-            var x = <?php echo $dadosDb ?>;
+            var dados = <?php echo $dadosDb ?>;
+            var dados3 = <?php echo $dadosDb3 ?>;
             var nome = '{{$nome}}';
             var visitanteID = {{$visitanteID}};
             var option = "";
-            for(var i = 0; i < x.length; i++){
-                option = option + "<option value='" + x[i].localID.toString() + "'>"+x[i].nomeLocal+"</option>";                
+            for(var i = 0; i < dados.length; i++){
+                option = option + "<option value='" + dados[i].localID.toString() + "'>"+dados[i].nomeLocal+"</option>";                
             }
             $('#localID').html(option).show();
+            
+            var option2 = "";
+            option2 = option2 + "<option value=''>" + " " + "</option>";
+
+            for(var j = 1; j <= 30; j++){
+                option2 = option2 + "<option value='" + j + "'>" + j + "</option>";
+            }
+
+            $('#numeroCracha').html(option2).show();
+
+            for(var k = 0; k < dados3.length; k++){
+                $("#numeroCracha option[value='" + dados3[k].numeroCracha + "']").remove();
+            }
+
         });
     });
 

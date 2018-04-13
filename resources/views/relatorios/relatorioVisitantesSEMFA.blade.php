@@ -71,7 +71,7 @@
             if (isset($dadosDb)){ 
         ?>
         
-        <div class="row justify-content-center">
+        <div class="row justify-content-center resp">
             <div class="col-md-12">
                 <div class="card">
                     <div class="card-header">Resultado</div>
@@ -84,6 +84,7 @@
                                 <th scope='col' style='vertical-align:middle'>Número do Documento</th>
                                 <th scope='col' style='vertical-align:middle'>Data e Hora da Visita</th>
                                 <th scope='col' style='vertical-align:middle'>Data e Hora da Saída</th>
+                                <th scope='col' style='vertical-align:middle'>Duração da Visita</th>
                                 <th scope='col' style='vertical-align:middle'>Local</th>
                                 <th scope='col' style='vertical-align:middle'>Pessoa que Visitou</th>
                                 <th scope='col' style='vertical-align:middle'>Assunto</th>
@@ -92,23 +93,25 @@
                         <tbody>
                             <?PHP
                                 $aux = 1;
+                                
                                 foreach ($dadosDb as $valor) {      
                                     $tipoDocumento = $valor->tipoDoc;   
                                     if($valor->tipoDoc == "carteiraTrabalho"){
                                         $tipoDocumento = "Carteira de Trabalho";
                                     }                   
                                     echo "<tr>";
-                                    echo "<td scope='col'> <img src='/abrir/". $valor->urlFoto ."' id='fotoVisitante' name='fotoVisitante' width='50px' height='50px' data-toggle='modal' data-target='#myModal". $aux ."'> </td>";
+                                    echo "<td scope='col'> <img src='/abrir/". $valor->urlFoto ."' width='50px' height='50px' data-toggle='modal' data-target='#myModal". $aux ."'> </td>";
                                     echo "<td scope='col'><a href='". route('verPerfilVisitante', ['visitanteID' => $valor->visitanteID]) ."'>". $valor->nomeVisitante ."</a></td>"; 
                                     echo "<td scope='col'>".$tipoDocumento."</td>";
                                     echo "<td scope='col'>".$valor->numeroDoc."</td>";
                                     echo "<td scope='col'>".$valor->dataHora."</td>";
                                     echo "<td scope='col'>".$valor->dataHoraSaida."</td>";
+                                    echo "<td scope='col'>".$valor->tempoGasto[0]."</td>";
                                     echo "<td scope='col'>".$valor->nomeLocal."</td>";
                                     echo "<td scope='col'>".$valor->visitado."</td>";
                                     echo "<td scope='col'>".$valor->assunto."</td>";
                                     echo "</tr>";
-
+                                    
                                     //Modal
                                     echo "<div class='modal fade' id='myModal". $aux ."' role='dialog'>";
                                     echo "<div class='modal-dialog row justify-content-center'>";
@@ -127,6 +130,16 @@
                             } else {
                                 echo "<li style='list-style-type: none; padding: 10px'> <p style='text-align: right; font-size:18px'><strong>Total de Visitas: " . count($dadosDb3) . "</strong></p></li>";
                                 echo "<li style='text-align: right; list-style-type: none; padding: 10px'> <p style='font-size:18px'><strong>Total de Visitantes: " . count($dadosDb2) ."</strong></p></li>";
+                            }
+
+                            if($tempoMedio < 60){
+                                echo "<li style='text-align: right; list-style-type: none; padding: 10px'> <p style='font-size:18px'><strong>Duração média das visitas: " . $tempoMedio . " min</strong></p></li>";
+                            } else{
+                                $tempoMedioHora = $tempoMedio/60;
+                                $tempoMedioHora = (int)$tempoMedioHora;
+                                $tempoMedioMinuto = $tempoMedio % 60;
+
+                                echo "<li style='text-align: right; list-style-type: none; padding: 10px'> <p style='font-size:18px'><strong>Duração média das visitas: " . $tempoMedioHora . " h e ". $tempoMedioMinuto . " min" ."</strong></p></li>";   
                             }
                         ?>
                     </ul>
@@ -147,7 +160,6 @@
     </div>
 
     @endguest
-
 
 @endsection
 
@@ -175,8 +187,6 @@
             $('#dataInicial').val(dataInicial);
             $('#dataFinal').val(dataFinal);
         });
-        
-
     </script>
 
 @endsection

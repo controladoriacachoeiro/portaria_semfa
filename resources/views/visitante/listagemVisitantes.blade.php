@@ -76,7 +76,7 @@
             if (isset($dadosDb)){ 
         ?>
         
-        <div class="row justify-content-center">
+        <div class="row justify-content-center resp">
             <div class="col-md-12">
                 <div class="card">
                     <div class="card-header">Resultado</div>
@@ -103,7 +103,7 @@
                                         $tipoDocumento = "Carteira de Trabalho";
                                     }                     
                                     echo "<tr>";
-                                    echo "<td scope='col'> <img src='/abrir/". $valor->urlFoto ."' id='fotoVisitante' name='fotoVisitante' width='50px' height='50px' data-toggle='modal' data-target='#myModal". $aux ."'> </td>";
+                                    echo "<td scope='col'> <img src='/abrir/". $valor->urlFoto ."' width='50px' height='50px' data-toggle='modal' data-target='#myModal". $aux ."'> </td>";
                                     echo "<td scope='col'><a href='". route('verPerfilVisitante', ['visitanteID' => $valor->visitanteID]) ."'>". $valor->nomeVisitante ."</a></td>"; 
                                     echo "<td scope='col'>".$tipoDocumento."</td>";
                                     echo "<td scope='col'>".$valor->numeroDoc."</td>";

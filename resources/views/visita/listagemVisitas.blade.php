@@ -82,8 +82,8 @@
             if (isset($dadosDb)){ 
         ?>
         
-        <div class="row justify-content-center">
-            <div class="col-md-14">
+        <div class="row justify-content-center resp">
+            <div class="col-md-12">
                 <div class="card">
                     <div class="card-header">Resultado</div>
                     <table id="tabela" class="table table-bordered table-striped" summary="Resultado da pesquisa">
@@ -91,11 +91,9 @@
                             <tr>
                                 <th scope='col' style='vertical-align:middle'>Foto</th>
                                 <th scope='col' style='vertical-align:middle'>Nome do Visitante</th>
-                                <th scope='col' style='vertical-align:middle'>Tipo de Documento</th>
-                                <th scope='col' style='vertical-align:middle'>Número do Documento</th>
+                                <th scope='col' style='vertical-align:middle'>Documento</th>
                                 <th scope='col' style='vertical-align:middle'>Data e Hora da Visita</th>
                                 <th scope='col' style='vertical-align:middle'>Data e Hora da Saída</th>
-                                <th scope='col' style='vertical-align:middle'>Número do Crachá</th>
                                 <th scope='col' style='vertical-align:middle'>Local</th>
                                 <th scope='col' style='vertical-align:middle'>Pessoa que Visitou</th>
                                 <th scope='col' style='vertical-align:middle'>Assunto</th>
@@ -115,13 +113,11 @@
                                         $tipoDocumento = "Carteira de Trabalho";
                                     }                 
                                     echo "<tr>";
-                                    echo "<td scope='col'> <img src='/abrir/". $valor->urlFoto ."' id='fotoVisitante' name='fotoVisitante' width='50px' height='50px' data-toggle='modal' data-target='#myModal". $aux ."'> </td>";
+                                    echo "<td scope='col'> <img src='/abrir/". $valor->urlFoto ."' width='50px' height='50px' data-toggle='modal' data-target='#myModal". $aux ."'> </td>";
                                     echo "<td scope='col'><a href='". route('verPerfilVisitante', ['visitanteID' => $valor->visitanteID]) ."'>". $valor->nomeVisitante ."</a></td>"; 
-                                    echo "<td scope='col'>".$tipoDocumento."</td>";
-                                    echo "<td scope='col'>".$valor->numeroDoc."</td>";
+                                    echo "<td scope='col'>". $tipoDocumento . " - " . $valor->numeroDoc."</td>";
                                     echo "<td scope='col'>".$valor->dataHora."</td>";
                                     echo "<td scope='col'>".$valor->dataHoraSaida."</td>";
-                                    echo "<td scope='col'>".$valor->numeroCracha."</td>";
                                     echo "<td scope='col'>".$valor->nomeLocal."</td>";
                                     echo "<td scope='col'>".$valor->visitado."</td>";
                                     echo "<td scope='col'>".$valor->assunto."</td>";
@@ -178,7 +174,6 @@
     </div>
 
     @endguest
-
 
 @endsection
 

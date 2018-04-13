@@ -15,6 +15,12 @@
     
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 
+    <style>
+        .resp{
+            overflow: auto; 
+            display: inline-block;
+        }
+    </style>
 
 </head>
 <body>
@@ -165,8 +171,10 @@
     </div>
 
     <footer class="border-top">
-        <div class="row justify-content-center">
-          <p>Desenvolvido pela equipe do Portal da Transparência - {{date('Y')}} - v-1.3</p>
+        <div class="container">
+            <div class="row justify-content-center">
+                <p>Desenvolvido pela equipe do Portal da Transparência - {{date('Y')}} - v-1.4</p>
+            </div>
         </div>
     </footer>
 
@@ -222,9 +230,6 @@
         var $seuCampoDataHoraSaida = $("#dataHoraSaida");
         $seuCampoDataHoraSaida.mask('00/00/0000 00:00');
 
-        var $seuCampoNumeroCracha = $("#numeroCracha");
-        $seuCampoNumeroCracha.mask('00');
-
         var $seuCampoTelefone = $("#telefone");
         $seuCampoTelefone.mask('00000000');
 
@@ -237,7 +242,6 @@
             });
         });
         
-
     </script>
         
     @yield('scriptAdd')

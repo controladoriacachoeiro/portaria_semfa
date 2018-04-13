@@ -97,7 +97,9 @@
                                 <label for="numeroCrachaLabel" class="col-md-4 col-form-label text-md-right">Número do Crachá</label>
 
                                 <div class="col-md-6">
-                                    <input id="numeroCracha" type="text" class="form-control" name="numeroCracha" value="{{$dadosDb[0]->numeroCracha}}">
+                                    <select id="numeroCracha" class="form-control" name="numeroCracha">
+
+                                    </select>
                                 </div>
                             </div>
 
@@ -167,14 +169,27 @@
     // LoadPage
     $(function () {
         $(document).ready(function() {
-            var x = <?php echo $dadosDb3 ?>;
-            
+            var dados = <?php echo $dadosDb ?>;
+            var dados3 = <?php echo $dadosDb3 ?>;
+            var dados4 = <?php echo $dadosDb4 ?>;
+
             var option = "";
-            for(var i = 0; i < x.length; i++){
-                option = option + "<option value='" + x[i].localID.toString() + "'>"+x[i].nomeLocal+"</option>";                
+            for(var i = 0; i < dados3.length; i++){
+                option = option + "<option value='" + dados3[i].localID.toString() + "'>"+dados3[i].nomeLocal+"</option>";                
             }
             $('#localID').html(option).show();
             $("#localID").val($('option:contains({{$dadosDb[0]->nomeLocal}})').val());
+
+            var option2 = "";
+            option2 = option2 + "<option value=''>" + " " + "</option>";
+
+            for(var j = 1; j <= 30; j++){
+                option2 = option2 + "<option value='" + j + "'>" + j + "</option>";
+            }
+
+            $('#numeroCracha').html(option2).show();
+            $("#numeroCracha").val($('option[value={{$dadosDb[0]->numeroCracha}}]').val());
+
         });
     });
 

@@ -14,10 +14,9 @@ class VisitaController extends Controller
 {
     //POST
     public function cadastrarVisita(Request $request){
-
+        
         $request->dataHora = $request->dataHora . ":00";
         $request->dataHora = $this->ajeitaDataHora2($request->dataHora);
-        
 
     	$dadosDb = VisitaModel::orderBy('visitaID');
     	$dadosDb->insert(['visitanteID' => $request->visitanteID, 'localID' => $request->localID, 'userID' => $request->userID, 'dataHora' => $request->dataHora ,'visitado' => $request->visitado, 'assunto' => $request->assunto, 'numeroCracha' => $request->numeroCracha]);
@@ -89,12 +88,18 @@ class VisitaController extends Controller
     public function carregarInformacoes($nome, $visitanteID){
     	$dadosDb = LocalModel::orderBy('nomeLocal');
         $dadosDb = $dadosDb->get();
-
+        
         $dadosDb2 = VisitanteModel::orderBy('visitanteID');
         $dadosDb2->where('visitanteID', '=', $visitanteID);
         $dadosDb2 = $dadosDb2->get();
 
-        $arrayDataFiltro =[];        
+        $dadosDb3 = VisitaModel::orderBy('numeroCracha');
+        $dadosDb3->select('numeroCracha');
+        $dadosDb3->where('dataHoraSaida', '=', null);
+        $dadosDb3->where('numeroCracha', '!=', null);
+        $dadosDb3 = $dadosDb3->get();
+
+        $arrayDataFiltro =[]; 
         
         foreach ($dadosDb as $valor) {
             array_push($arrayDataFiltro,$valor);
@@ -104,16 +109,16 @@ class VisitaController extends Controller
         $dadosDb = $arrayDataFiltro;    
         //dd($dadosDb);
                                 
-        return View('visita/cadastroVisita',compact('dadosDb', 'dadosDb2', 'nome', 'visitanteID'));
+        return View('visita/cadastroVisita',compact('dadosDb', 'dadosDb2', 'dadosDb3', 'nome', 'visitanteID'));
     }
 
     //GET
     public function carregarTodasVisitas(){
         $dadosDb = VisitaModel::orderBy('visitaID', 'desc');
 
+        $dadosDb->join('users', 'visita.userID', '=', 'users.id');
         $dadosDb->join('visitante', 'visita.visitanteID', '=', 'visitante.visitanteID');
         $dadosDb->join('local', 'visita.localID', '=', 'local.localID');
-        $dadosDb->join('users', 'visita.userID', '=', 'users.id');
         
         $dadosDb = $dadosDb->paginate(20);
 
@@ -189,6 +194,11 @@ class VisitaController extends Controller
         $dadosDb3 = LocalModel::orderBy('localID');
         $dadosDb3 = $dadosDb3->get();
 
+        $dadosDb4 = VisitaModel::orderBy('numeroCracha');
+        $dadosDb4->select('numeroCracha');
+        $dadosDb4->where('dataHoraSaida', '=', null);
+        $dadosDb4->where('numeroCracha', '!=', null);
+        $dadosDb4 = $dadosDb4->get();
 
         foreach($dadosDb as $valor){
             $valor->dataHora = $this->ajeitaDataHora($valor->dataHora);
@@ -198,7 +208,7 @@ class VisitaController extends Controller
             }
         }
 
-        return view('visita/editarVisita', compact('dadosDb', 'dadosDb2', 'dadosDb3'));
+        return view('visita/editarVisita', compact('dadosDb', 'dadosDb2', 'dadosDb3', 'dadosDb4'));
     }
 
     //GET
@@ -289,9 +299,14 @@ class VisitaController extends Controller
             }
 
             $valor->dataHora = $this->ajeitaDataHora($valor->dataHora);
+            
             if($valor->dataHoraSaida != null){
                 $valor->dataHoraSaida = $this->ajeitaDataHora($valor->dataHoraSaida);
+                $valor->tempoGasto = $this->calculaTempoVisita($valor->dataHora, $valor->dataHoraSaida);
+            } else {
+                $valor->tempoGasto = $this->calculaTempoVisita($valor->dataHora, date('d/m/Y H:i:s'));
             }
+
         }
 
         $dadosDb2 = VisitaModel::orderBy('visitaID');
@@ -309,7 +324,32 @@ class VisitaController extends Controller
         $dadosDb3->count();
         $dadosDb3 = $dadosDb3->get();
 
-        return View('relatorios/relatorioVisitantesSEMFA',compact('dadosDb', 'dadosDb2', 'dadosDb3'));
+        $totalHoras = 0;
+        $totalMinutos = 0;
+        $contador = 0;
+
+        foreach($dadosDb3 as $valor3){   
+            if($valor3->dataHoraSaida != null){
+                $valor3->tempoGasto = $this->calculaTempoVisita($valor3->dataHora, $valor3->dataHoraSaida);
+            } else {
+                $valor3->tempoGasto = $this->calculaTempoVisita($valor3->dataHora, date('Y-m-d H:i:s'));
+            }
+
+            $totalHoras = $totalHoras + $valor3->tempoGasto[1];
+            $totalMinutos = $totalMinutos + $valor3->tempoGasto[2];
+
+            if(($valor3->tempoGasto[1] != 0) || ($valor3->tempoGasto[2] != 0)){
+                $contador++;
+            }
+        }
+
+        $horasAux = $totalHoras * 60;
+        $tempoTotal = $horasAux + $totalMinutos;
+
+        $tempoMedio = $tempoTotal/$contador;
+        $tempoMedio = (int)$tempoMedio;
+
+        return View('relatorios/relatorioVisitantesSEMFA',compact('dadosDb', 'dadosDb2', 'dadosDb3', 'tempoMedio'));
     }
 
     //POST
@@ -410,6 +450,64 @@ class VisitaController extends Controller
         $resultado = $ano . "-" . $mes . "-" . $dia;
         
         return $resultado;
+    }
+
+    public function calculaTempoVisita($dataInicial, $dataFinal){
+        
+        if($dataInicial > $dataFinal){
+            $tempoGasto[0] = "A data/hora de entrada é maior que a data/hora da saída";
+            $tempoGasto[1] = 0;
+            $tempoGasto[2] = 0;
+
+            return $tempoGasto;
+        }
+
+        $elemento = explode(" ", $dataInicial);
+        $horaInicial = $elemento[1];
+        $data1 = $elemento[0];
+
+        $elemento2 = explode(" ", $dataFinal);
+        $horaFinal = $elemento2[1];
+        $data2 = $elemento2[0];
+        
+        $elemento3 = explode(":", $horaInicial);
+        $horaInicialAux = $elemento3[0];
+        $minutoInicialAux = $elemento3[1];
+
+        $elemento4 = explode(":", $horaFinal);
+        $horaFinalAux = $elemento4[0];
+        $minutoFinalAux = $elemento4[1];
+
+        if($data2 != $data1){
+            $tempoGasto[0] = "Data de saída é diferente da data de entrada";
+            $tempoGasto[1] = 0;
+            $tempoGasto[2] = 0;
+
+            return $tempoGasto;
+        }
+
+        if($minutoInicialAux > $minutoFinalAux){
+            $minutoFinalAux = $minutoFinalAux + 60;
+            $horaFinalAux = $horaFinalAux - 1;
+        } 
+
+        $diferencaMinuto = $minutoFinalAux - $minutoInicialAux;
+        $diferencaHora = $horaFinalAux - $horaInicialAux;
+
+        $tempoGasto[1] = $diferencaHora;
+        $tempoGasto[2] = $diferencaMinuto;
+
+        if($diferencaHora == 0 ){
+            $tempoGasto[0] = $diferencaMinuto . " min";
+        } else {
+            if($tempoGasto[2] == 0 ){
+                $tempoGasto[0] = $diferencaHora . " h";
+            } else {
+                $tempoGasto[0] = $diferencaHora . " h e " . $diferencaMinuto . " min";
+            }
+        }
+        
+        return $tempoGasto;
     }
 
     public static function remontarCPF($cpf){

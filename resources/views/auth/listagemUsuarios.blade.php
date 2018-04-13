@@ -80,8 +80,8 @@
             if (isset($dadosDb)){ 
         ?>
         
-        <div class="row justify-content-center">
-            <div class="col-md-13">
+        <div class="row justify-content-center resp">
+            <div class="col-md-12">
                 <div class="card">
                     <div class="card-header">Resultado</div>
                     <table id="tabela" class="table table-bordered table-striped" summary="Resultado da pesquisa">
