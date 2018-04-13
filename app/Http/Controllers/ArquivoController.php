@@ -11,9 +11,12 @@ use Illuminate\Http\Request;
 class ArquivoController extends Controller
 {
     public function abrirArquivo($nomeArquivo){
-        
-        $file_path = public_path('../storage/app/'.$nomeArquivo);
-        
+        if (file_exists(public_path('../storage/app/'.$nomeArquivo)) == false) {
+            $file_path = public_path('/img/avatar_padrao.jpg');
+        }else{
+            $file_path = public_path('../storage/app/'.$nomeArquivo);
+        }
+                                
         return response()->file($file_path);
     }
 
