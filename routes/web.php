@@ -99,13 +99,15 @@ Route::get('/relatorioVisitantesSEMFA', function () {
 	return view('relatorios/relatorioVisitantesSEMFA');
 });
 
-Route::post('/carregarRelatorioVisitantesSEMFA', 'VisitaController@relatorioVisitantesSEMFA');
-
 Route::get('/relatorioVisitantesSEMFA/dataInicial/{dataInicial}/dataFinal/{dataFinal}', ['as'=> 'mostrarVisitasSEMFA', 'uses'=>'VisitaController@mostrarVisitasSEMFA']);
 
 Route::get('/relatorioVisitantesPorSetor', function () {
 	return view('relatorios/relatorioVisitantesPorSetor');
 });
+
+Route::get('/relatorioPDF/{dataInicial}/{dataFinal}', ['as' => '/relatorioPDF', 'uses' => 'VisitaController@gerarRelatorio']);
+
+Route::post('/carregarRelatorioVisitantesSEMFA', 'VisitaController@relatorioVisitantesSEMFA');
 
 Route::post('/carregarRelatorioVisitantesSetor', 'VisitaController@relatorioVisitantesPorSetor');
 

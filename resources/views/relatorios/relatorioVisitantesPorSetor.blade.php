@@ -40,7 +40,7 @@
 
                             <div class="form-group row mb-0">
                                 <div class="col-md-6 offset-md-4">
-                                    <button type="submit" class="btn btn-primary">Procurar</button>
+                                    <button type="submit" class="btn btn-primary">Procurar</button>                                
                                 </div>
                             </div>
 
@@ -99,6 +99,9 @@
                         ?>
                     </ul>
                 </div>
+                <?php 
+                    echo "<a class='btn btn-primary' style='float: right; margin-top: 10px' href='". route('/relatorioPDF', ['dataInicial' => $dataInicial, 'dataFinal' => $dataFinal]) . "' role='button' target='blank'>Gerar PDF</a>";
+                ?>
             </div>
         </div>
         @if(session()->has('message'))

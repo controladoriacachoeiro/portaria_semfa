@@ -58,6 +58,7 @@ class VisitaController extends Controller
         
         $dadosDb = VisitaModel::orderBy('visitaID', 'desc');
         $dadosDb->whereBetween('dataHora', [$dataInicial . ' 00:00:01', $dataFinal . ' 23:59:59']);
+        $dadosDb->join('users', 'visita.userID', '=', 'users.id');
         $dadosDb->join('visitante', 'visita.visitanteID', '=', 'visitante.visitanteID');
         $dadosDb->join('local', 'visita.localID', '=', 'local.localID');
         $dadosDb->count();
@@ -355,6 +356,12 @@ class VisitaController extends Controller
     //POST
     public function relatorioVisitantesPorSetor(Request $request){
 
+        $dataInicial = $request->dataInicial;
+        $dataFinal = $request->dataFinal;
+
+        $dataInicial = $this->ajeitaDataUrl($dataInicial);
+        $dataFinal = $this->ajeitaDataUrl($dataFinal);
+
         if($request->dataInicial == null){
             return redirect('relatorioVisitantesPorSetor')->with('message', 'Por favor selecione uma Data Inicial!');
         }
@@ -391,7 +398,40 @@ class VisitaController extends Controller
         $dadosDb2->groupBy('nomeVisitante');
         $dadosDb2 = $dadosDb2->get();
 
-        return View('relatorios/relatorioVisitantesPorSetor',compact('dadosDb', 'dadosDb2'));
+        return View('relatorios/relatorioVisitantesPorSetor',compact('dadosDb', 'dadosDb2', 'dataInicial', 'dataFinal'));
+    }
+
+    public function gerarRelatorio($dataInicial, $dataFinal){
+
+        //Usando a biblioteca barryvdh/laravel-dompdf
+        //https://blog.especializati.com.br/gerar-pdf-no-laravel-com-dompdf/
+        //https://github.com/barryvdh/laravel-dompdf
+
+        $dataInicial = $this->ajeitaDataUrl2($dataInicial);
+        $dataFinal = $this->ajeitaDataUrl2($dataFinal);
+        
+        $dataInicialAux = $this->ajeitaDataUrl($dataInicial);
+        $dataFinalAux = $this->ajeitaDataUrl($dataFinal);
+        
+        $dadosDb = VisitaModel::orderBy('nomeLocal');
+        $dadosDb->selectRaw('COUNT(*) as quantidade, nomeLocal');
+        $dadosDb->whereBetween('dataHora', [$dataInicial . ' 00:00:01', $dataFinal . ' 23:59:59']);
+        $dadosDb->join('local', 'visita.localID', '=', 'local.localID');
+        $dadosDb->groupBy('nomeLocal');
+        $dadosDb = $dadosDb->get();
+
+        $dadosDb2 = VisitaModel::orderBy('visitaID');
+        $dadosDb2->selectRaw('COUNT(*) as quantidade, nomeVisitante');
+        $dadosDb2->whereBetween('dataHora', [$dataInicial . ' 00:00:01', $dataFinal . ' 23:59:59']);
+        $dadosDb2->join('local', 'visita.localID', '=', 'local.localID');
+        $dadosDb2->join('visitante', 'visita.visitanteID', '=', 'visitante.visitanteID');
+        $dadosDb2->groupBy('nomeVisitante');
+        $dadosDb2 = $dadosDb2->get();
+
+        $dataInicial = $this->ajeitaData($dataInicial);
+        $dataFinal = $this->ajeitaData($dataFinal);
+        
+        return \PDF::loadView('relatorios.relatorioVisitantesPorSetorPDF', compact('dadosDb', 'dadosDb2', 'dataInicial', 'dataFinal'))->stream('relatorio_visitantes_por_setor_' . $dataInicialAux . '_a_' . $dataFinalAux . '.pdf');
     }
 
     public function ajeitaDataHora($dataHora){
@@ -448,6 +488,17 @@ class VisitaController extends Controller
         $ano = $elemento[2];
 
         $resultado = $ano . "-" . $mes . "-" . $dia;
+        
+        return $resultado;
+    }
+
+    public function ajeitaData($data){
+
+        $elemento = explode("-", $data);
+        $ano = $elemento[0];
+        $mes = $elemento[1];
+        $dia = $elemento[2];
+        $resultado = $dia . '/' . $mes . '/' . $ano;
         
         return $resultado;
     }

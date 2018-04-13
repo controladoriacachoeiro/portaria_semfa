@@ -83,9 +83,9 @@
             if (isset($dadosDb)){ 
         ?>
         
-        <div class="row justify-content-center resp">
+        <div class="row justify-content-center">
             <div class="col-md-10">
-                <div class="card">
+                <div class="card resp">
                     <div class="card-header" style="color: red; font-size: 16"><b>Resultado da Busca</b></div>
                     <table id="tabela" class="table table-bordered table-striped" summary="Resultado da pesquisa">
                         <thead>
