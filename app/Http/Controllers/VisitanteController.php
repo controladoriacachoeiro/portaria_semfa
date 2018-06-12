@@ -25,7 +25,7 @@ class VisitanteController extends Controller
             $request->numeroDoc = $this->ajeitarCPF($request->numeroDoc);
             $cpfValido = $this->validarCPF($request->numeroDoc);
             if ($cpfValido == false){
-                return redirect()->back()->with('message', "CPF Inválido!");
+                return redirect()->back()->with('message', "CPF Inválido!")->withInput();
             }
         }
 
@@ -40,7 +40,7 @@ class VisitanteController extends Controller
                     foreach ($files2 as $file2){
                         // somente foto
                         if ($file->getClientMimeType() != ("image/jpeg") && $file->getClientMimeType() != ("image/png")){
-                            return redirect()->back()->with('message', 'Formato de arquivo inválido! Por favor envie somente foto!');
+                            return redirect()->back()->with('message', 'Formato de arquivo inválido! Por favor envie somente foto!')->withInput();
                         } 
                     }
                     
@@ -58,7 +58,7 @@ class VisitanteController extends Controller
                 $dadosDb->insert(['nomeVisitante' => $request->nome, 'tipoDoc' => $request->tipoDoc, 'numeroDoc' => $request->numeroDoc, 'urlFoto' => 'avatar_padrao.jpg']);
             }       
         } else {
-            return redirect()->back()->with('message', 'Número de documento já existente!');
+            return redirect()->back()->with('message', 'Número de documento já existente!')->withInput();
         }
 
         if(isset($request->checkboxVisita)){

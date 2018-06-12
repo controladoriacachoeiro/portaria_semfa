@@ -215,7 +215,7 @@
                             <label for="numeroDocumentoLabel" class="col-md-4 col-form-label text-md-right">Número do Documento</label>
 
                             <div class="col-md-6">
-                                <input id="numeroDoc" type="text" class="form-control{{ $errors->has('numeroDoc') ? ' is-invalid' : '' }}" name="numeroDoc" required>
+                                <input id="numeroDoc" type="text" class="form-control{{ $errors->has('numeroDoc') ? ' is-invalid' : '' }}" name="numeroDoc" value="{{ old('numeroDoc') }}" required>
                                 <div class="help-block with-errors alert-danger" style="font-size: 14px; text-align: center; margin-top: 5px; border-radius: 5px"></div>
                             </div>
 

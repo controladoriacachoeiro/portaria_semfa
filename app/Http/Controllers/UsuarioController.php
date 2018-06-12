@@ -19,7 +19,7 @@ class UsuarioController extends Controller
             $request->numeroDoc = $this->ajeitarCPF($request->numeroDoc);
             $cpfValido = $this->validarCPF($request->numeroDoc);
             if ($cpfValido == false){
-                return redirect()->back()->with('message', "CPF Inválido!");
+                return redirect()->back()->with('message', "CPF Inválido!")->withInput();
             }
         }
 
@@ -32,7 +32,7 @@ class UsuarioController extends Controller
         if($dadosDb2->isEmpty()){
             $dadosDb->insert(['name' => $request->name, 'email' => $request->email, 'password' => Hash::make($request->password), 'tipoDoc' => $request->tipoDoc, 'numeroDoc' => $request->numeroDoc, 'status' => 'Ativo', 'remember_token' => $token, 'created_at' => date('Y-m-d H:i:s'), 'updated_at' => date('Y-m-d H:i:s'), 'idGrupo' => $request->idGrupo]);
         } else {
-            return redirect()->back()->with('message', 'Número de documento já existente!');
+            return redirect()->back()->with('message', 'Número de documento já existente!')->withInput();
         }
 
         return redirect()->route('home')->with('sucesso', 'Usuário Cadastrado com sucesso.');

@@ -45,7 +45,7 @@ return [
 
         'local' => [
             'driver' => 'local',
-            'root' => storage_path('app'),
+            'root' => '/var/backup/portariasemfa',
         ],
 
         'public' => [
@@ -64,6 +64,20 @@ return [
             'url' => env('AWS_URL'),
         ],
 
-    ],
+        // 'pastaBackup' => [
+        //     'driver' => 'local',
+        //     'root' => storage_path('../../../../backups-projetos'),
+        // ],
 
+        'pastaBackupSftp' => [
+            'driver' => 'sftp',
+            'host' => '10.1.4.22',
+            'username' => env('USERNAME_FTP'),
+            'password' => env('PASSWORD_FTP'),
+            // 'root' => storage_path('/var/www/teste'),
+            'root' => '/var/backup/portariasemfa',
+        ],
+
+    ],
+    
 ];
