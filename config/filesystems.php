@@ -45,7 +45,7 @@ return [
 
         'local' => [
             'driver' => 'local',
-            'root' => '/var/backup/portariasemfa',
+            'root' => storage_path('app'),
         ],
 
         'public' => [
@@ -75,6 +75,11 @@ return [
             'username' => env('USERNAME_FTP'),
             'password' => env('PASSWORD_FTP'),
             // 'root' => storage_path('/var/www/teste'),
+            'root' => '/var/backup/portariasemfa',
+        ],
+
+        'backupPortaria' => [
+            'driver' => 'local',
             'root' => '/var/backup/portariasemfa',
         ],
 
